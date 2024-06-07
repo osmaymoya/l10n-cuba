@@ -3,7 +3,7 @@
 
 {
      'name': 'Cuba - HR Contratos',
-     'version': '15.0',
+     'version': '17.0',
      'category': 'Human Resources',
      'summary': """
         Contratos de empleados, régimen de contribución.

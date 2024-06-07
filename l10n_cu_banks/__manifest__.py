@@ -8,7 +8,7 @@
 
 {
     'name': 'Bancos Cubanos',
-    'version': '15.0',
+    'version': '17.0',
     'author': 'Idola Odoo Team, Comunidad cubana de Odoo',
     'category': 'Localization',
     'description': """
