@@ -12,7 +12,6 @@
     "author" : "Idola Odoo Team, Comunidad cubana de Odoo",
     "category": "Localization",
     "depends" : [
-        "l10n_cu",
     ],
     "license": "AGPL-3",
     "data" : [
