@@ -1,92 +1,68 @@
-// /** @odoo-module **/
-// import {WebsiteSale} from "@website_sale/js/website_sale";
-//
-// WebsiteSale.include({
-//     events: Object.assign({}, WebsiteSale.prototype.events, {
-//         "change select[name='city_id']": "_onChangeCity",
-//     }),
-//     start: function () {
-//         this.elementCities = document.querySelector("select[name='city_id']");
-//         this.elementDistricts = document.querySelector("select[name='l10n_pe_district']");
-//         this.cityBlock = document.querySelector(".div_city");
-//         this.autoFormat = document.querySelector(".checkout_autoformat");
-//         this.elementState = document.querySelector("select[name='state_id']");
-//         this.elemenCountry = document.querySelector("select[name='country_id']");
-//         this.isPeruvianCompany = this.elemenCountry?.dataset.company_country_code === 'PE';
-//         return this._super.apply(this, arguments);
-//     },
-//     _changeOption: function (selectCheck, rpcRoute, place, selectElement) {
-//         if (!selectCheck) {
-//             return;
-//         }
-//         return this.rpc(rpcRoute, {
-//         }).then((data) => {
-//             if (this.isPeruvianCompany) {
-//                 if (data[place]?.length) {
-//                     selectElement.innerHTML = "";
-//                     data[place].forEach((item) => {
-//                         let opt = document.createElement("option");
-//                         opt.textContent = item[1];
-//                         opt.value = item[0];
-//                         opt.setAttribute("data-code", item[2]);
-//                         selectElement.appendChild(opt);
-//                     });
-//                     selectElement.parentElement.style.display = "block";
-//                 } else {
-//                     selectElement.value = "";
-//                     selectElement.parentElement.style.display = "none";
-//                 }
-//             }
-//         });
-//     },
-//     _onChangeState: function (ev) {
-//         return this._super.apply(this, arguments).then(() => {
-//             let selectedCountry = this.elemenCountry.options[this.elemenCountry.selectedIndex].getAttribute("code");
-//             if (this.isPeruvianCompany && selectedCountry === "PE") {
-//                 if (this.elementState.value === "" && this.elemenCountry.value !== '') {
-//                     this.elementState.options[1].selected = true;
-//                 }
-//                 const state = this.elementState.value;
-//                 const rpcRoute = `/shop/state_infos/${state}`;
-//                 return this.autoFormat.length
-//                     ? this._changeOption(state, rpcRoute, "cities", this.elementCities).then(() => this._onChangeCity())
-//                     : undefined;
-//             }
-//         });
-//     },
-//     _onChangeCity: function () {
-//         if (this.isPeruvianCompany) {
-//             const city = this.elementCities.value;
-//             const rpcRoute = `/shop/city_infos/${city}`;
-//             return this.autoFormat.length
-//                 ? this._changeOption(city, rpcRoute, "districts", this.elementDistricts)
-//                 : undefined;
-//         }
-//     },
-//     _onChangeCountry: function (ev) {
-//         return this._super.apply(this, arguments).then(() => {
-//             if (this.isPeruvianCompany) {
-//                 let selectedCountry = ev.currentTarget.options[ev.currentTarget.selectedIndex].getAttribute("code");
-//                 let cityInput = document.querySelector(".form-control[name='city']");
-//                 if (selectedCountry == "PE") {
-//                     if (cityInput.value) {
-//                         cityInput.value = "";
-//                     }
-//                     this.cityBlock.classList.add("d-none");
-//                     return this._onChangeState().then(() => {
-//                         this._onChangeCity();
-//                     });
-//                 } else {
-//                     this.cityBlock.querySelectorAll("input").forEach((input) => {
-//                         input.value = "";
-//                     });
-//                     this.cityBlock.classList.remove("d-none");
-//                     this.elementCities.value = "";
-//                     this.elementCities.parentElement.style.display = "none";
-//                     this.elementDistricts.value = "";
-//                     this.elementDistricts.parentElement.style.display = "none";
-//                 }
-//             }
-//         });
-//     },
-// });
+/** @odoo-module **/
+import {WebsiteSale} from "@website_sale/js/website_sale";
+import {debounce} from "@web/core/utils/timing";
+
+WebsiteSale.include({
+    /**
+     * @constructor
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+        this._onChangeState = debounce(this._onChangeState.bind(this), 500);
+    },
+
+    _onChangeCountry: function (ev) {
+        return this._super.apply(this, arguments).then(() => {
+            $("select[name='state_id']").trigger('change');
+        });
+    },
+
+    _onChangeState: function (ev) {
+        return this._super.apply(this, arguments).then(() => {
+            const country = $("select[name='country_id']");
+
+            const selectedOption = country.find('option:selected');
+            const countryCode = selectedOption.attr('code');
+            const mode = country.attr('mode');
+
+            const state = $("select[name='state_id']");
+
+            if (state.val() === '' || countryCode !== 'CU') {
+                const data = {
+                    municipalities: []
+                }
+                return this._expandDataStates(data);
+            }
+
+            return this.rpc("/shop/l10n_cu/state_infos/" + parseInt(state.val()), {
+                mode: mode
+            }).then((data) => {
+                return this._expandDataStates(data);
+            })
+
+        });
+    },
+
+    _expandDataStates(data) {
+        // populate states and display
+        let selectMunicipalities = $("select[name='res_municipality_id']");
+        // dont reload state at first loading (done in qweb)
+        if (selectMunicipalities.data('init') === 0 || selectMunicipalities.find('option').length === 1) {
+            if (data.municipalities.length || data.municipality_required) {
+                selectMunicipalities.html('');
+                data.municipalities.forEach((x) => {
+                    let opt = $('<option>').text(x[1])
+                        .attr('value', x[0])
+                        .attr('data-code', x[2]);
+                    selectMunicipalities.append(opt);
+                });
+                selectMunicipalities.parent('div').show();
+            } else {
+                selectMunicipalities.val('').parent('div').hide();
+            }
+            selectMunicipalities.data('init', 0);
+        } else {
+            selectMunicipalities.data('init', 0);
+        }
+    }
+});
