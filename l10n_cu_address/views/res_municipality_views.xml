@@ -6,10 +6,11 @@
             <field name="name">res_municipality_view_tree</field>
             <field name="model">res.municipality</field>
             <field name="arch" type="xml">
-                <tree string="res_municipality_tree">
+                <tree string="Municipalities" name="res_municipality_tree" editable="bottom">
                     <field name="name"/>
                     <field name="code"/>
                     <field name="state_id" options="{'no_create': True, 'no_open': True}"/>
+                    <field name="country_id" options="{'no_create': True, 'no_open': True}"/>
                 </tree>
             </field>
         </record>
