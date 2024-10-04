@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-
         <record id="res_municipality_view_tree" model="ir.ui.view">
             <field name="name">res_municipality_view_tree</field>
             <field name="model">res.municipality</field>
@@ -14,7 +13,6 @@
                 </tree>
             </field>
         </record>
-
         <!-- Future Implementations -->
         <record id="res_municipality_view_form" model="ir.ui.view">
             <field name="name">res_municipality_view_form</field>
@@ -31,7 +29,6 @@
             </field>
         </record>
         <!-- -->
-
         <record id="action_list_municipalities" model="ir.actions.act_window">
             <field name="name">Municipalities</field>
             <field name="res_model">res.municipality</field>
@@ -43,7 +40,5 @@
 
         <menuitem id="menu_res_municipality" action="l10n_cu_address.action_list_municipalities" name="Municipalities"
                   parent="contacts.menu_localisation" sequence="2"/>
-
-
     </data>
 </odoo>
