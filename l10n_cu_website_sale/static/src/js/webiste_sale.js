@@ -11,10 +11,21 @@ WebsiteSale.include({
         this._onChangeState = debounce(this._onChangeState.bind(this), 500);
     },
 
-    _onChangeCountry: function (ev) {
-        return this._super.apply(this, arguments).then(() => {
-            $("select[name='state_id']").trigger('change');
-        });
+    /**
+     * Extended to hide municipalities when the region changes
+     * and avoid the slight delay. Afterward, _onChangeState is called again
+     * to synchronize municipalities as soon as the states/provinces are
+     * obtained.
+     *
+     * @private
+     */
+    _changeCountry: function () {
+        let data = {
+            municipalities: []
+        }
+        this._expandDataStates(data);
+        this._super.apply(this, arguments);
+        this._onChangeState(this);
     },
 
     _onChangeState: function (ev) {
@@ -28,7 +39,7 @@ WebsiteSale.include({
             const state = $("select[name='state_id']");
 
             if (state.val() === '' || countryCode !== 'CU') {
-                const data = {
+                let data = {
                     municipalities: []
                 }
                 return this._expandDataStates(data);
