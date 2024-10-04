@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import http
+from odoo import http, _
 from odoo.http import request
 
 from odoo.addons.website_sale.controllers.main import WebsiteSale
@@ -33,6 +33,40 @@ class L10nCuWebsiteSale(WebsiteSale):
                 req.remove('city')
 
         return req
+
+    def checkout_form_validate(self, mode, all_form_values, data):
+        error, error_message = super(L10nCuWebsiteSale, self).checkout_form_validate(mode, all_form_values, data)
+
+        # country and state validation
+        try:
+            country_id = data.get("country_id")
+            if not country_id.isdigit():
+                raise ValueError(_('Country ID must be a valid integer.'))
+
+            country = request.env['res.country'].browse(int(country_id))
+
+            if not country.exists():
+                error["country_id"] = 'error'
+                error_message.append(_('Invalid Country! Please select a valid country.'))
+
+            state_id = data.get("state_id")
+
+            if state_id and not state_id.isdigit():
+                raise ValueError(_('State ID must be a valid integer.'))
+
+            if state_id and int(state_id) not in country.state_ids.ids:
+                error["state_id"] = 'error'
+                error_message.append(_('Invalid State / Province. Please select a valid State or Province.'))
+
+            if country and not state_id and country.state_required:
+                error["state_id"] = 'error'
+                error_message.append(_('Some required fields are empty.'))
+
+        except ValueError as e:
+            error['common'] = 'Unknown error'
+            error_message.append(e.args[0])
+
+        return error, error_message
 
     def _get_mandatory_fields_shipping(self, country_id=False):
         req = super(L10nCuWebsiteSale, self)._get_mandatory_fields_shipping(country_id=country_id)
