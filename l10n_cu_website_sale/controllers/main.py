@@ -45,9 +45,13 @@ class L10nCuWebsiteSale(WebsiteSale):
 
         return req
 
-    @http.route(['/shop/l10n_cu/state_infos/<model("res.country.state"):state>'], type="json", auth="public", methods=["POST"], website=True,)
+    @http.route(['/shop/l10n_cu/state_infos/<model("res.country.state"):state>'], type="json", auth="public", methods=["POST"], website=True, )
     def l10n_cu_state_infos(self, state, mode, **kw):
 
         municipalities = state.get_website_sale_municipalities(mode=mode)
+        municipality_required = state.country_id.municipality_required
 
-        return {'municipalities': [(c.id, c.name, c.code) for c in municipalities]}
+        return {
+            'municipalities': [(c.id, c.name, c.code) for c in municipalities],
+            'municipality_required': municipality_required
+        }
