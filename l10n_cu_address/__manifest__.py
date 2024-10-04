@@ -12,12 +12,15 @@
     "author" : "Idola Odoo Team, Comunidad cubana de Odoo",
     "category": "Localization",
     "depends" : [
+        'base',
+        'contacts'
     ],
     "license": "AGPL-3",
     "data" : [
         'data/res_country_state_data.xml',
         'data/res_municipality_data.xml',
-        'views/res_cu_municipality.xml',
+        'views/res_municipality_views.xml',
+        'views/res_partner_views.xml',
         'security/ir.model.access.csv',
     ],
     'demo': [
