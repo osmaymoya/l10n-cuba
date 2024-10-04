@@ -37,30 +37,24 @@ class L10nCuWebsiteSale(WebsiteSale):
     def checkout_form_validate(self, mode, all_form_values, data):
         error, error_message = super(L10nCuWebsiteSale, self).checkout_form_validate(mode, all_form_values, data)
 
-        # country and state validation
+        # municipality validation
         try:
             country_id = data.get("country_id")
-            if not country_id.isdigit():
-                raise ValueError(_('Country ID must be a valid integer.'))
-
             country = request.env['res.country'].browse(int(country_id))
 
-            if not country.exists():
-                error["country_id"] = 'error'
-                error_message.append(_('Invalid Country! Please select a valid country.'))
-
             state_id = data.get("state_id")
+            state = request.env['res.country.state'].browse(int(state_id))
 
-            if state_id and not state_id.isdigit():
-                raise ValueError(_('State ID must be a valid integer.'))
+            res_municipality_id = data.get("res_municipality_id")
 
-            if state_id and int(state_id) not in country.state_ids.ids:
-                error["state_id"] = 'error'
-                error_message.append(_('Invalid State / Province. Please select a valid State or Province.'))
+            if state:
+                if res_municipality_id and int(res_municipality_id) not in state.res_municipality_id.ids:
+                    error["municipality_id"] = 'error'
+                    error_message.append(_('Invalid Municipality. Please select a valid Municipality.'))
 
-            if country and not state_id and country.state_required:
-                error["state_id"] = 'error'
-                error_message.append(_('Some required fields are empty.'))
+                if not res_municipality_id and country.municipality_required:
+                    error["municipality_id"] = 'error'
+                    error_message.append(_('Some required fields are empty.'))
 
         except ValueError as e:
             error['common'] = 'Unknown error'
