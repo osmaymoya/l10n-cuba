@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import http
+from odoo import http, _
 from odoo.http import request
 
 from odoo.addons.website_sale.controllers.main import WebsiteSale
@@ -33,6 +33,34 @@ class L10nCuWebsiteSale(WebsiteSale):
                 req.remove('city')
 
         return req
+
+    def checkout_form_validate(self, mode, all_form_values, data):
+        error, error_message = super(L10nCuWebsiteSale, self).checkout_form_validate(mode, all_form_values, data)
+
+        # municipality validation
+        try:
+            country_id = data.get("country_id")
+            country = request.env['res.country'].browse(int(country_id))
+
+            state_id = data.get("state_id")
+            state = request.env['res.country.state'].browse(int(state_id))
+
+            res_municipality_id = data.get("res_municipality_id")
+
+            if state:
+                if res_municipality_id and int(res_municipality_id) not in state.res_municipality_id.ids:
+                    error["municipality_id"] = 'error'
+                    error_message.append(_('Invalid Municipality. Please select a valid Municipality.'))
+
+                if not res_municipality_id and country.municipality_required:
+                    error["municipality_id"] = 'error'
+                    error_message.append(_('Some required fields are empty.'))
+
+        except ValueError as e:
+            error['common'] = 'Unknown error'
+            error_message.append(e.args[0])
+
+        return error, error_message
 
     def _get_mandatory_fields_shipping(self, country_id=False):
         req = super(L10nCuWebsiteSale, self)._get_mandatory_fields_shipping(country_id=country_id)

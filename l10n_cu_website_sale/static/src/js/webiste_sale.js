@@ -33,12 +33,12 @@ WebsiteSale.include({
             const country = $("select[name='country_id']");
 
             const selectedOption = country.find('option:selected');
-            const countryCode = selectedOption.attr('code');
+            // const countryCode = selectedOption.attr('code');
             const mode = country.attr('mode');
 
             const state = $("select[name='state_id']");
 
-            if (state.val() === '' || countryCode !== 'CU') {
+            if (state.val() === '') {
                 let data = {
                     municipalities: []
                 }
