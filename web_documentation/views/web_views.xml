@@ -170,9 +170,9 @@
 <!--                                           title="Enlazar permanentemente con este título">¶-->
 <!--                                        </a>-->
                                     </strong>
-                                    <p>Vaya a <span class="menuselection">Facturacion / Contabilidad ‣ Configuracion ‣
+                                    <p>Vaya a <span class="menuselection">Facturación / Contabilidad ‣ Configuración ‣
                                         Ajustes</span>, y
-                                        seleccione su actor economico. Odoo instala automáticamente el paquete Cuba -
+                                        seleccione su actor económico. Odoo instala automáticamente el paquete Cuba -
                                         Plan Contable Sector Privado y Cooperativo.
                                     </p>
                                     <div class="alert alert-warning">
@@ -193,8 +193,8 @@
 <!--                                           title="Enlazar permanentemente con este título">¶-->
 <!--                                        </a>-->
                                     </strong>
-                                    <p>En dependencia de paquete seleccionado seran los impuestos. La localización
-                                        Cubana maneja impuestos sobre las ventas y se direferncia porque terminan en la palabra (IMPUESTO),
+                                    <p>En dependencia de paquete seleccionado serán los impuestos. La localización
+                                        Cubana maneja impuestos sobre las ventas y se diferencia porque terminan en la palabra (IMPUESTO),
                                         tenga en cuenta que los demas impuestos que aparecen son meramente auxiliares.
                                     </p>
                                     <img alt="Steps to enable electronic invoicing" class="align-center img-fluid"
@@ -210,13 +210,13 @@
                                     <p>Los impuestos y las cuentas predeterminadas se establecen en los productos y los
                                         clientes para crear nuevas transacciones al instante. Sin embargo, es posible que tenga
                                         que utilizar diferentes impuestos y registrar las transacciones en diferentes cuentas, de
-                                        acuerdo con las ubicaciones y tipos de negocio que tengan sus clientes y proveedores. En el menu
-                                        Facturacion / Contabilidad ‣ Configuracion ‣ Posiciones fiscales
+                                        acuerdo con las ubicaciones y tipos de negocio que tengan sus clientes y proveedores. En el menú
+                                        Facturación / Contabilidad ‣ Configuración ‣ Posiciones fiscales
                                     </p>
                                     <p>Las <strong>Posiciones fiscales</strong> permiten crear conjuntos de reglas que
                                         adaptan automáticamente los impuestos y las cuentas utilizadas para una transacción.
-                                        Ejemplo la posicion fiscal Ventas Mayoristas (PRIVADO Y COOPERATIVO) cuando se
-                                        aplique enuna orden de venta o en una factura podra anular el impuesto sobre las ventas.
+                                        Ejemplo la posición fiscal Ventas Mayoristas (PRIVADO Y COOPERATIVO) cuando se
+                                        aplique en una orden de venta o en una factura podra anular el impuesto sobre las ventas.
                                     </p>
                                     <img alt="Steps to enable electronic invoicing" class="align-center img-fluid"
                                          src="/web_documentation/static/src/img/cu_co_03.png"/>
@@ -237,7 +237,7 @@
                                 </section>
                                 <br/>
                                 <section id="enable-fiscal-position">
-                                    <strong>Salario minimo
+                                    <strong>Salario mínimo
 <!--                                        <a class="headerlink" href="#enable-min_salary"-->
 <!--                                           title="Enlazar permanentemente con este título">¶-->
 <!--                                        </a>-->
